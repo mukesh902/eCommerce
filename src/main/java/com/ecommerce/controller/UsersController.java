@@ -1,7 +1,6 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.UserDto;
-import com.ecommerce.entities.Users;
 import com.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,9 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
-        Optional<UserDto> usersById = userService.getUserById(id);
-        if (usersById.isPresent())
-            return new ResponseEntity<>(usersById, HttpStatus.OK);
+        Optional<UserDto> userById = userService.getUserById(id);
+        if (userById.isPresent())
+            return new ResponseEntity<>(userById, HttpStatus.OK);
 
         return new ResponseEntity<>("Invalid User ID ", HttpStatus.BAD_REQUEST);
     }
