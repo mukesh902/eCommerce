@@ -10,9 +10,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    ResponseEntity<?> registerUsers(Users user);
+    ResponseEntity<?> registerUsers(UserDto userDto);
 
     List<UserDto> getAllUsers();
 
     Optional<UserDto> getUserById(Long id);
+
+    ResponseEntity<?> updateUserById(Long id, UserDto userDto);
+
+    ResponseEntity<?> deleteUserById(Long id);
 }

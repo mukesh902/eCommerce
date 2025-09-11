@@ -3,6 +3,7 @@ package com.ecommerce.controller;
 import com.ecommerce.dto.UserDto;
 import com.ecommerce.entities.Users;
 import com.ecommerce.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,25 +20,38 @@ public class UsersController {
     UserService userService;
 
     @PostMapping("/register")
-    private ResponseEntity<?> registerUsers(@RequestBody Users users) {
-        return userService.registerUsers(users);
+    public ResponseEntity<?> registerUsers(@Valid @RequestBody UserDto userDto) {
+        return userService.registerUsers(userDto);
     }
 
     @GetMapping("/all")
-    private ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
         List<UserDto> allUsers = userService.getAllUsers();
-        if (allUsers.isEmpty() || allUsers == null)
+        if (allUsers == null || allUsers.isEmpty())
             return new ResponseEntity<>("No Users are registered yet", HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
         Optional<UserDto> usersById = userService.getUserById(id);
         if (usersById.isPresent())
             return new ResponseEntity<>(usersById, HttpStatus.OK);
 
         return new ResponseEntity<>("Invalid User ID ", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUserById(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+        return userService.updateUserById(id, userDto);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable("id") Long id) {
+        if (id == null || id == 0)
+            return new ResponseEntity<>("Please provide the User ID", HttpStatus.BAD_REQUEST);
+        return userService.deleteUserById(id);
     }
 
 }
