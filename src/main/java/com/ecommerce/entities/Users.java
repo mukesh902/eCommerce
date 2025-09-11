@@ -1,9 +1,11 @@
 package com.ecommerce.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-public class User {
+@Data
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +19,9 @@ public class User {
     private String lastName;
     @Column(name = "mobile_number")
     private String mobileNumber;
+    @Column(name = "password")
+    private String password;
+
 
 
 }
