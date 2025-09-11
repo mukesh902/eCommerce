@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
         // Convert DTO → Entity
         Users userEntity = UserMapper.mapToUserEntity(userDto);
 
-        // ⚠️ Best practice: hash the password before saving
+        //  hash the password
          userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         Users savedUser = userRepository.save(userEntity);
