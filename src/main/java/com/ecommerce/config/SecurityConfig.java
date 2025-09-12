@@ -11,12 +11,24 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     // 1️⃣ Security filter chain (existing)
+    // ✅ Single SecurityFilterChain for all rules
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())   // disable CSRF for APIs
+                // CSRF: disable globally, but allow ignoring for H2 console specifically
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**") // ignore CSRF for H2
+                )
+
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()    // allow all endpoints
+                        .requestMatchers("/h2-console/**").permitAll() // allow H2 console
+                        .anyRequest().permitAll()                     // allow all other endpoints (for now)
+                )
+
+                // Allow frames for H2 console
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
                 );
 
         return http.build();
@@ -27,4 +39,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

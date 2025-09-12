@@ -24,5 +24,4 @@ public interface UserService {
 
     List<UserDto> searchUsers(String keyword);
 
-//    List<UserDto> searchUserByMobileNumber(String mobileNumber);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -57,13 +58,13 @@ public class UsersController {
     public ResponseEntity<?> searchUserByMobileNumber(@RequestParam String mobileNumber) {
         Optional<UserDto> user = userService.searchUserByMobileNumber(mobileNumber);
 
-        if (user.isEmpty() || !user.isPresent())
+        if (user.isEmpty())
             return new ResponseEntity<>("User not found with mobile number: " + mobileNumber, HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/q")
     public ResponseEntity<?> searchUsers(@RequestParam String keyword) {
         List<UserDto> result = userService.searchUsers(keyword);
 
@@ -73,8 +74,4 @@ public class UsersController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-
-
-
 }
