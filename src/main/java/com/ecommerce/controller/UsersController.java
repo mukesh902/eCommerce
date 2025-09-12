@@ -53,4 +53,28 @@ public class UsersController {
         return userService.deleteUserById(id);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUserByMobileNumber(@RequestParam String mobileNumber) {
+        Optional<UserDto> user = userService.searchUserByMobileNumber(mobileNumber);
+
+        if (user.isEmpty() || !user.isPresent())
+            return new ResponseEntity<>("User not found with mobile number: " + mobileNumber, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUsers(@RequestParam String keyword) {
+        List<UserDto> result = userService.searchUsers(keyword);
+
+        if (result.isEmpty()) {
+            return new ResponseEntity<>("No users found with value: " + keyword, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+
+
 }

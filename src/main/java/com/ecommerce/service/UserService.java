@@ -19,4 +19,10 @@ public interface UserService {
     ResponseEntity<?> updateUserById(Long id, UserDto userDto);
 
     ResponseEntity<?> deleteUserById(Long id);
+
+    Optional<UserDto> searchUserByMobileNumber(String mobileNumber);
+
+    List<UserDto> searchUsers(String keyword);
+
+//    List<UserDto> searchUserByMobileNumber(String mobileNumber);
 }

@@ -4,6 +4,7 @@ import com.ecommerce.dto.UserDto;
 import com.ecommerce.entities.Users;
 import com.ecommerce.mapper.UserMapper;
 import com.ecommerce.reporsitories.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -31,6 +33,11 @@ public class UserServiceImpl implements UserService{
                 userDto.getEmailId() == null || userDto.getEmailId().isEmpty()) {
             return new ResponseEntity<>("Mobile number or Email is missing", HttpStatus.BAD_REQUEST);
         }
+
+        List<UserDto> userWithMobile = searchUsers(userDto.getMobileNumber());
+
+        if (!userWithMobile.isEmpty())
+            return new ResponseEntity<>("User is already with mobile number: "+userDto.getMobileNumber(), HttpStatus.BAD_REQUEST);
 
         // Convert DTO → Entity
         Users userEntity = UserMapper.mapToUserEntity(userDto);
@@ -96,4 +103,19 @@ public class UserServiceImpl implements UserService{
         userRepository.deleteById(id);
         return new ResponseEntity<>("User with id " + id + " removed from database", HttpStatus.OK);
     }
+
+    @Override
+    public Optional<UserDto> searchUserByMobileNumber(String mobileNumber) {
+        return userRepository.findByMobileNumber(mobileNumber)
+                .map(UserMapper::mapToUserDto); // convert entity -> DTO
+    }
+
+    @Override
+    public List<UserDto> searchUsers(String keyword) {
+        return userRepository.searchUsers(keyword)
+                .stream()
+                .map(UserMapper::mapToUserDto)
+                .collect(Collectors.toList());
+    }
+
 }
