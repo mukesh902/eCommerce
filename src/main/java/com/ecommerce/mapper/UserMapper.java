@@ -34,7 +34,7 @@ public class UserMapper {
         users.setLastName(userDto.getLastName());
         users.setEmailId(userDto.getEmailId());
         users.setMobileNumber(userDto.getMobileNumber());
-        users.setPassword(userDto.getPassword());
+//        users.setPassword(userDto.getPassword());
         return users;
     }
 

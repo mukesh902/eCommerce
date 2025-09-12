@@ -1,7 +1,6 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.UserDto;
-import com.ecommerce.entities.Users;
 import com.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,9 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
-        Optional<UserDto> usersById = userService.getUserById(id);
-        if (usersById.isPresent())
-            return new ResponseEntity<>(usersById, HttpStatus.OK);
+        Optional<UserDto> userById = userService.getUserById(id);
+        if (userById.isPresent())
+            return new ResponseEntity<>(userById, HttpStatus.OK);
 
         return new ResponseEntity<>("Invalid User ID ", HttpStatus.BAD_REQUEST);
     }
@@ -53,5 +52,29 @@ public class UsersController {
             return new ResponseEntity<>("Please provide the User ID", HttpStatus.BAD_REQUEST);
         return userService.deleteUserById(id);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUserByMobileNumber(@RequestParam String mobileNumber) {
+        Optional<UserDto> user = userService.searchUserByMobileNumber(mobileNumber);
+
+        if (user.isEmpty() || !user.isPresent())
+            return new ResponseEntity<>("User not found with mobile number: " + mobileNumber, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUsers(@RequestParam String keyword) {
+        List<UserDto> result = userService.searchUsers(keyword);
+
+        if (result.isEmpty()) {
+            return new ResponseEntity<>("No users found with value: " + keyword, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+
 
 }
